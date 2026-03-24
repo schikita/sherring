@@ -2,7 +2,10 @@
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
     <title>Парковки, штрафы и ограничения скорости — Живой репортаж</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -539,8 +542,15 @@
               <h2 class="section__title">Самокатчик</h2>
               <p class="section__text scooter-game__lead">
                 Управляйте скоростью и полосой, соблюдайте светофор и лимиты,
-                заряжайте батарею и избегайте люков и пешеходов. Клавиша X —
-                спешиться и ехать медленнее.
+                заряжайте батарею и избегайте люков и пешеходов.
+                <span class="scooter-game__lead-keyboard">
+                  Клавиша X — спешиться и ехать медленнее.
+                </span>
+                <span class="scooter-game__lead-touch">
+                  На смартфоне: в верхней части экрана игры тапните слева, по
+                  центру или справа, чтобы сменить полосу; внизу удерживайте
+                  центр — газ, нижние углы — тормоз; кнопка «Спешиться» — пешком.
+                </span>
               </p>
               <div class="scooter-game__canvas-wrap">
                 <canvas
@@ -556,12 +566,26 @@
                     <p class="scooter-game__overlay-title" id="scooterOverlayTitle">
                       Самокатчик
                     </p>
-                    <p class="scooter-game__overlay-text" id="scooterOverlayText">
+                    <p
+                      class="scooter-game__overlay-text scooter-game__overlay-text--desktop"
+                      id="scooterOverlayText"
+                    >
                       Удерживайте <strong>W</strong> или <strong>↑</strong> — газ,
                       <strong>S</strong> или <strong>↓</strong> — тормоз. A D /
                       ← → — полоса, <strong>X</strong> — спешиться (медленнее).
                       Красный свет: почти остановитесь. Зелёная площадка — зарядка
                       (медленно).
+                    </p>
+                    <p
+                      class="scooter-game__overlay-text scooter-game__overlay-text--mobile"
+                      id="scooterOverlayTextMobile"
+                    >
+                      <strong>Верхняя половина</strong> — тап слева / центр / справа
+                      для смены полосы. <strong>Нижняя зона</strong>: удерживайте
+                      <strong>центр</strong> — газ, <strong>нижние углы</strong> —
+                      тормоз (или кнопка «Тормоз»). <strong>Спешиться</strong> —
+                      кнопка под полем. Красный свет: почти остановитесь. Зелёная
+                      площадка — зарядка (медленно).
                     </p>
                     <button
                       type="button"
@@ -572,6 +596,26 @@
                     </button>
                   </div>
                 </div>
+              </div>
+              <div
+                class="scooter-game__touch-bar"
+                id="scooterTouchBar"
+                aria-label="Дополнительные элементы управления"
+              >
+                <button
+                  type="button"
+                  class="btn btn--ghost scooter-game__touch-btn"
+                  id="scooterTouchBrake"
+                >
+                  Тормоз
+                </button>
+                <button
+                  type="button"
+                  class="btn btn--ghost scooter-game__touch-btn"
+                  id="scooterTouchDismount"
+                >
+                  Спешиться
+                </button>
               </div>
               <div class="scooter-game__hud" aria-live="polite">
                 <div class="scooter-game__stat">

@@ -286,6 +286,12 @@
   var overlay = document.getElementById("scooterGameOverlay");
   var overlayTitle = document.getElementById("scooterOverlayTitle");
   var overlayText = document.getElementById("scooterOverlayText");
+  var overlayTextMobile = document.getElementById("scooterOverlayTextMobile");
+
+  function setOverlayBody(text) {
+    if (overlayText) overlayText.textContent = text;
+    if (overlayTextMobile) overlayTextMobile.textContent = text;
+  }
 
   var LANES = 3;
   /** Глобальный масштаб объектов, шрифтов и коллизий */
@@ -304,6 +310,8 @@
   /** Половина «толщины» перекрёстка по dist — там едут авто, пешеходы не ходят */
   var CROSS_CAR_ROAD_HALF = 120 * G;
   var keysHeld = {};
+  /** Сенсор: нижняя зона канваса — газ (центр) / тормоз (углы); brakeBtn — кнопка «Тормоз». */
+  var touchDrive = { gas: false, brake: false, brakeBtn: false };
   var COLORS = {
     road: "#2a2d3a",
     lane: "rgba(255,255,255,0.22)",
@@ -529,17 +537,17 @@
 
     var acc = 2.8;
     if (state.dismounted) state.throttle = Math.min(state.throttle, 0.55);
-    if (keysHeld.KeyW || keysHeld.ArrowUp) {
-      state.throttle = Math.min(1, state.throttle + dt * acc);
-    }
-    if (keysHeld.KeyS || keysHeld.ArrowDown) {
+    var touchBrake = touchDrive.brake || touchDrive.brakeBtn;
+    if (keysHeld.KeyS || keysHeld.ArrowDown || touchBrake) {
       state.throttle = Math.max(0, state.throttle - dt * acc);
-    }
-    if (
+    } else if (keysHeld.KeyW || keysHeld.ArrowUp || touchDrive.gas) {
+      state.throttle = Math.min(1, state.throttle + dt * acc);
+    } else if (
       !keysHeld.KeyW &&
       !keysHeld.ArrowUp &&
       !keysHeld.KeyS &&
-      !keysHeld.ArrowDown
+      !keysHeld.ArrowDown &&
+      !touchDrive.gas
     ) {
       state.throttle = Math.max(0, state.throttle - dt * 0.45);
     }
@@ -1175,6 +1183,7 @@
   function startGame() {
     loadGameSprites();
     resize();
+    root.classList.add("scooter-game--playing");
     state.running = true;
     state.paused = false;
     state.gameOver = false;
@@ -1209,7 +1218,19 @@
     if (btnStart) btnStart.textContent = "Играть снова";
     if (btnPause) btnPause.textContent = "Пауза";
     if (hudFines) hudFines.textContent = "0";
-    setMsg("Удерживайте W — газ. S — тормоз.", 5);
+    var touchUi = false;
+    if (window.matchMedia) {
+      touchUi =
+        window.matchMedia("(max-width: 639px)").matches ||
+        (window.matchMedia("(hover: none)").matches &&
+          window.matchMedia("(pointer: coarse)").matches);
+    }
+    setMsg(
+      touchUi
+        ? "Низ экрана: центр — газ, углы — тормоз. Вверху тап — полоса."
+        : "Удерживайте W — газ. S — тормоз.",
+      5
+    );
     setTimeout(function () {
       if (canvas && canvas.focus) {
         try {
@@ -1225,6 +1246,10 @@
   function endGame(msg, overlayTitleText) {
     state.gameOver = true;
     state.running = false;
+    root.classList.remove("scooter-game--playing");
+    touchDrive.gas = false;
+    touchDrive.brake = false;
+    touchDrive.brakeBtn = false;
     if (overlay) {
       overlay.hidden = false;
       overlay.classList.remove("is-pause");
@@ -1243,13 +1268,15 @@
     state.paused = !state.paused;
     if (btnPause) btnPause.textContent = state.paused ? "Продолжить" : "Пауза";
     if (state.paused) {
+      touchDrive.gas = false;
+      touchDrive.brake = false;
+      touchDrive.brakeBtn = false;
       if (overlay) {
         overlay.hidden = false;
         overlay.classList.add("is-pause");
       }
       if (overlayTitle) overlayTitle.textContent = "Пауза";
-      if (overlayText)
-        overlayText.textContent = "Нажмите «Продолжить» под полем игры.";
+      setOverlayBody("Нажмите «Продолжить» под полем игры.");
     } else {
       if (overlay) {
         overlay.hidden = true;
@@ -1302,6 +1329,9 @@
   });
   window.addEventListener("blur", function () {
     keysHeld = {};
+    touchDrive.gas = false;
+    touchDrive.brake = false;
+    touchDrive.brakeBtn = false;
   });
 
   if (btnStart) btnStart.addEventListener("click", startGame);
@@ -1313,6 +1343,47 @@
     var x = clientX - rect.left;
     if (x < rect.width * 0.33) state.targetLane = Math.max(0, state.targetLane - 1);
     else if (x > rect.width * 0.67) state.targetLane = Math.min(LANES - 1, state.targetLane + 1);
+  }
+
+  function syncTouchDrivingFromTouches(touches) {
+    touchDrive.gas = false;
+    touchDrive.brake = false;
+    if (!state.running || state.paused || state.gameOver) return;
+    var rect = canvas.getBoundingClientRect();
+    var i;
+    for (i = 0; i < touches.length; i++) {
+      var t = touches[i];
+      var x = t.clientX - rect.left;
+      var y = t.clientY - rect.top;
+      if (y < rect.height * 0.52 || y > rect.height + 8) continue;
+      var xf = x / rect.width;
+      if (xf < 0.2 || xf > 0.8) touchDrive.brake = true;
+      else touchDrive.gas = true;
+    }
+    if (touchDrive.brake) touchDrive.gas = false;
+  }
+
+  function onCanvasTouchStart(ev) {
+    if (!state.running || state.gameOver || state.paused) return;
+    var rect = canvas.getBoundingClientRect();
+    var k;
+    for (k = 0; k < ev.changedTouches.length; k++) {
+      var te = ev.changedTouches[k];
+      var y = te.clientY - rect.top;
+      if (y < rect.height * 0.52) canvasSteer(te.clientX);
+    }
+    syncTouchDrivingFromTouches(ev.touches);
+    ev.preventDefault();
+  }
+
+  function onCanvasTouchMove(ev) {
+    if (!state.running || state.gameOver || state.paused) return;
+    syncTouchDrivingFromTouches(ev.touches);
+    ev.preventDefault();
+  }
+
+  function onCanvasTouchEnd(ev) {
+    syncTouchDrivingFromTouches(ev.touches);
   }
 
   canvas.addEventListener("mousedown", function () {
@@ -1327,16 +1398,39 @@
   canvas.addEventListener("click", function (ev) {
     canvasSteer(ev.clientX);
   });
-  canvas.addEventListener(
-    "touchstart",
-    function (ev) {
-      if (ev.touches.length) canvasSteer(ev.touches[0].clientX);
-    },
-    { passive: true }
-  );
+  canvas.addEventListener("touchstart", onCanvasTouchStart, { passive: false });
+  canvas.addEventListener("touchmove", onCanvasTouchMove, { passive: false });
+  canvas.addEventListener("touchend", onCanvasTouchEnd, { passive: true });
+  canvas.addEventListener("touchcancel", onCanvasTouchEnd, { passive: true });
+
+  var touchBrakeBtn = document.getElementById("scooterTouchBrake");
+  var touchDismountBtn = document.getElementById("scooterTouchDismount");
+  if (touchBrakeBtn) {
+    function brakeBtnOff() {
+      touchDrive.brakeBtn = false;
+    }
+    touchBrakeBtn.addEventListener("pointerdown", function (e) {
+      if (!state.running || state.gameOver || state.paused) return;
+      e.preventDefault();
+      touchDrive.brakeBtn = true;
+      try {
+        touchBrakeBtn.setPointerCapture(e.pointerId);
+      } catch (eCap) {}
+    });
+    touchBrakeBtn.addEventListener("pointerup", brakeBtnOff);
+    touchBrakeBtn.addEventListener("pointercancel", brakeBtnOff);
+    touchBrakeBtn.addEventListener("lostpointercapture", brakeBtnOff);
+  }
+  if (touchDismountBtn) {
+    touchDismountBtn.addEventListener("click", function () {
+      if (!state.running || state.gameOver || state.paused) return;
+      state.dismounted = !state.dismounted;
+    });
+  }
 
   window.addEventListener("resize", function () {
-    if (state.running) resize();
+    resize();
+    render();
   });
 
   resize();
