@@ -40,7 +40,7 @@
  * • assets/sprites/player-left.png — наклон влево (смена полосы)
  * • assets/sprites/player-right.png — наклон вправо
  * • assets/sprites/luk.png — канализационный люк
- * • assets/sprites/promo.jpg — заставка до «Начать игру»
+ * • assets/sprites/promo.jpg — заставка до «Начать игру» (грузится при появлении секции #game в зоне просмотра)
  * Пешеходы — вдоль основной полосы (dist), не на перекрёстке с авто; 4 модели + offset:
  * • walker-N-left.png / walker-N-right.png — направление вдоль тротуара (N = 1…4)
  */
@@ -164,7 +164,10 @@
     img.src = resolveAsset("assets/sprites/road.png");
   }
 
+  var promoImageLoadStarted = false;
   function loadPromoImage() {
+    if (promoImageLoadStarted) return;
+    promoImageLoadStarted = true;
     var img = new Image();
     img.onload = function () {
       promoSprite = img;
@@ -247,13 +250,29 @@
   function loadGameSprites() {
     if (gameSpritesLoaded) return;
     gameSpritesLoaded = true;
+    loadPromoImage();
     loadPlayerSprites();
     loadManholeSprite();
     loadEnergySprite();
     loadRoadCrossSprite();
-    loadPromoImage();
     loadWalkerSprites();
     loadTrafficAndAutoSprites();
+  }
+
+  /** Заставка promo.jpg — сразу при попадании секции игры в зону просмотра (остальные спрайты — по «Начать игру»). */
+  var gameSection = document.getElementById("game");
+  if (gameSection && "IntersectionObserver" in window) {
+    var promoSectionObs = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          loadPromoImage();
+          promoSectionObs.unobserve(entry.target);
+        });
+      },
+      { root: null, rootMargin: "0px 0px 10% 0px", threshold: 0.02 }
+    );
+    promoSectionObs.observe(gameSection);
   }
 
   var hudScore = document.getElementById("scooterHudScore");
