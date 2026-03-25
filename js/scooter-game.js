@@ -298,10 +298,19 @@
   var G = 1.5;
   /** Езда: быстрее движение по трассе и выше км/ч на HUD (пешком не меняется) */
   var RIDE_SPEED_MULT = 1.48;
-  /** Перекрёсток: светофор на dist − lightAhead; жёлтый → зелёный через N с */
+  /** Перекрёсток: светофор на dist − lightAhead; жёлтый → зелёный; штраф только на красный */
   var CROSS_YELLOW_SEC = 2;
   var CROSS_GREEN_SEC = 5.5;
   var CROSS_CAR_SPEED_PX = 310;
+  /** Светофор дальше от линии перекрёстка — больше места до «островка» */
+  var CROSS_LIGHT_AHEAD = Math.round(148 * G);
+  /** Зона красного: только на красный; жёлтый не штрафует (узкий участок перед стоп-линией) */
+  var RED_ZONE_REL_MIN = -138 * G;
+  var RED_ZONE_REL_MAX = 228 * G;
+  /** Небольшой откат назад при торможении стоя */
+  var REVERSE_SPEED_MULT = 0.22;
+  /** Свайп по верхней зоне: мин. горизонтальное смещение (px) */
+  var LANE_SWIPE_MIN_PX = 52;
   /** Пешеход ушёл под низ кадра — переспавн впереди (не трогаем «за горизонтом» впереди) */
   var PED_VIEW_PAD = 70;
   var PED_RECYCLE_REL = 135 * G;
@@ -312,6 +321,8 @@
   var keysHeld = {};
   /** Сенсор: нижняя зона канваса — газ (центр) / тормоз (углы); brakeBtn — кнопка «Тормоз». */
   var touchDrive = { gas: false, brake: false, brakeBtn: false };
+  /** Жест смены полосы: старт в верхней зоне канваса */
+  var laneGesture = null;
   var COLORS = {
     road: "#2a2d3a",
     lane: "rgba(255,255,255,0.22)",
@@ -363,6 +374,17 @@
     var rect = root.getBoundingClientRect();
     var w = Math.min(920, Math.max(280, rect.width));
     var h = Math.round((w * 9) / 16);
+    if (typeof window !== "undefined" && window.innerHeight > 320) {
+      var vh = window.visualViewport
+        ? window.visualViewport.height
+        : window.innerHeight;
+      var maxH = Math.max(220, vh * 0.4);
+      if (h > maxH) {
+        h = Math.round(maxH);
+        w = Math.round((h * 16) / 9);
+        w = Math.min(920, Math.max(280, w));
+      }
+    }
     canvas.width = w * devicePixelRatio;
     canvas.height = h * devicePixelRatio;
     canvas.style.width = w + "px";
@@ -398,7 +420,7 @@
   function intersectionUpdate(e, dt, w) {
     if (e.type !== "crossRoad") return;
     if (!e.cars) e.cars = [];
-    if (e.lightAhead == null) e.lightAhead = Math.round(110 * G);
+    if (e.lightAhead == null) e.lightAhead = CROSS_LIGHT_AHEAD;
     var spd = CROSS_CAR_SPEED_PX * G;
 
     if (e.phase === "red") {
@@ -447,7 +469,7 @@
         dist: base,
         phase: "red",
         phaseT: 0,
-        lightAhead: Math.round(110 * G),
+        lightAhead: CROSS_LIGHT_AHEAD,
         cars: [],
         carsSpawned: false,
       });
@@ -554,6 +576,14 @@
 
     var move = moveMultiplier();
     state.dist += state.scroll * dt * move;
+    if (
+      move < 0.04 &&
+      (keysHeld.KeyS || keysHeld.ArrowDown || touchBrake) &&
+      state.throttle < 0.08
+    ) {
+      state.dist -= state.scroll * dt * REVERSE_SPEED_MULT;
+      if (state.dist < 0) state.dist = 0;
+    }
     state.score += state.scroll * dt * 0.18 * move;
     if (state.msgTimer > 0) state.msgTimer -= dt;
     if (state.msgTimer <= 0 && hudMsg) hudMsg.textContent = "";
@@ -595,9 +625,9 @@
       if (e.type === "crossRoad") {
         intersectionUpdate(e, dt, wPlay);
         if (
-          (e.phase === "red" || e.phase === "yellow") &&
-          rel > -85 * G &&
-          rel < 165 * G
+          e.phase === "red" &&
+          rel > RED_ZONE_REL_MIN &&
+          rel < RED_ZONE_REL_MAX
         ) {
           state.redZoneActive = true;
         }
@@ -630,8 +660,8 @@
         rel = e.dist - playerDist;
         var plCx = laneCenterX(pl, wPlay);
         if (
-          Math.abs(rel) < 62 * G &&
-          Math.abs(pedCx - plCx) < 48 * G &&
+          Math.abs(rel) < 40 * G &&
+          Math.abs(pedCx - plCx) < 30 * G &&
           !state.dismounted
         ) {
           pedHit = true;
@@ -657,9 +687,7 @@
 
       if (e.type === "charger") {
         var onPad =
-          e.lane === pl &&
-          Math.abs(rel) < e.len * 0.45 &&
-          playerKmh() < 10;
+          e.lane === pl && Math.abs(rel) < e.len * 0.55;
         if (onPad) {
           charging = true;
           state.battery = Math.min(100, state.battery + 42 * dt);
@@ -787,7 +815,7 @@
 
   function drawCrossRoadStrip(w, h, yCenter) {
     var img = roadCrossSprite;
-    var stripH = Math.min(h * 0.22, Math.max(48 * G, h * 0.12));
+    var stripH = Math.min(h * 0.28, Math.max(58 * G, h * 0.14));
     if (img && img.naturalWidth > 0) {
       var ar = img.naturalWidth / img.naturalHeight;
       var fromAr = w / ar;
@@ -851,7 +879,7 @@
         }
       }
 
-      var la = e.lightAhead != null ? e.lightAhead : Math.round(110 * G);
+      var la = e.lightAhead != null ? e.lightAhead : CROSS_LIGHT_AHEAD;
       var relL = rel - la;
       var yL = worldY(relL, h);
       drawTrafficLightSprite(w, h, yL, e.phase || "red");
@@ -1184,6 +1212,7 @@
     loadGameSprites();
     resize();
     root.classList.add("scooter-game--playing");
+    laneGesture = null;
     state.running = true;
     state.paused = false;
     state.gameOver = false;
@@ -1227,8 +1256,8 @@
     }
     setMsg(
       touchUi
-        ? "Низ экрана: центр — газ, углы — тормоз. Вверху тап — полоса."
-        : "Удерживайте W — газ. S — тормоз.",
+        ? "Вверху: свайп влево/вправо или тап по зонам — полоса. Низ — газ и тормоз."
+        : "W — газ, S — тормоз; на месте с зажатым S можно чуть откатиться назад.",
       5
     );
     setTimeout(function () {
@@ -1250,6 +1279,7 @@
     touchDrive.gas = false;
     touchDrive.brake = false;
     touchDrive.brakeBtn = false;
+    laneGesture = null;
     if (overlay) {
       overlay.hidden = false;
       overlay.classList.remove("is-pause");
@@ -1271,6 +1301,7 @@
       touchDrive.gas = false;
       touchDrive.brake = false;
       touchDrive.brakeBtn = false;
+      laneGesture = null;
       if (overlay) {
         overlay.hidden = false;
         overlay.classList.add("is-pause");
@@ -1332,6 +1363,7 @@
     touchDrive.gas = false;
     touchDrive.brake = false;
     touchDrive.brakeBtn = false;
+    laneGesture = null;
   });
 
   if (btnStart) btnStart.addEventListener("click", startGame);
@@ -1370,7 +1402,9 @@
     for (k = 0; k < ev.changedTouches.length; k++) {
       var te = ev.changedTouches[k];
       var y = te.clientY - rect.top;
-      if (y < rect.height * 0.52) canvasSteer(te.clientX);
+      if (y < rect.height * 0.52) {
+        laneGesture = { x: te.clientX, y: te.clientY, id: te.identifier };
+      }
     }
     syncTouchDrivingFromTouches(ev.touches);
     ev.preventDefault();
@@ -1383,6 +1417,31 @@
   }
 
   function onCanvasTouchEnd(ev) {
+    if (state.running && !state.gameOver && !state.paused) {
+      var k;
+      for (k = 0; k < ev.changedTouches.length; k++) {
+        var te = ev.changedTouches[k];
+        if (laneGesture && te.identifier === laneGesture.id) {
+          var dx = te.clientX - laneGesture.x;
+          var dy = te.clientY - laneGesture.y;
+          if (
+            Math.abs(dx) >= LANE_SWIPE_MIN_PX &&
+            Math.abs(dx) > Math.abs(dy) + 8
+          ) {
+            if (dx > 0) {
+              state.targetLane = Math.min(LANES - 1, state.targetLane + 1);
+            } else {
+              state.targetLane = Math.max(0, state.targetLane - 1);
+            }
+          } else if (Math.abs(dx) < 34 && Math.abs(dy) < 44) {
+            canvasSteer(te.clientX);
+          }
+          laneGesture = null;
+        }
+      }
+    } else {
+      laneGesture = null;
+    }
     syncTouchDrivingFromTouches(ev.touches);
   }
 

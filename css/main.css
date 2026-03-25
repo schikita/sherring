@@ -758,6 +758,80 @@ main {
   padding-block: clamp(4.5rem, 11vw, 7.5rem);
 }
 
+#sharing.section--prose,
+#fines.section--prose {
+  min-height: clamp(30rem, 78svh, 56rem);
+  align-items: center;
+}
+
+/* #fines, #crossings: фото без оверлея, блок справа на подложке */
+.section--fines .section__bg,
+.section--crossings .section__bg {
+  filter: none;
+  opacity: 1;
+}
+
+.section--fines:not(.is-bg-visible) .section__bg,
+.section--crossings:not(.is-bg-visible) .section__bg {
+  opacity: 0.45;
+  filter: blur(1px);
+}
+
+.section--fines.is-bg-visible .section__bg,
+.section--crossings.is-bg-visible .section__bg {
+  opacity: 1;
+  filter: none;
+}
+
+.section--fines.section--prose .section__inner--fines,
+.section--crossings.section--prose-wide .section__inner--crossings {
+  max-width: min(1120px, 100% - 2.5rem);
+  width: 100%;
+  margin-inline: auto;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.section--fines .fines-panel,
+.section--crossings .crossings-panel {
+  max-width: min(26rem, 100%);
+  padding: clamp(1.35rem, 3.5vw, 1.85rem) clamp(1.25rem, 3vw, 1.75rem);
+  border-radius: var(--radius);
+  background: rgba(10, 12, 22, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px);
+  box-shadow:
+    0 20px 48px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.section--crossings .crossings-panel {
+  max-width: min(34rem, 100%);
+}
+
+.section--fines .fines-panel .section__title,
+.section--crossings .crossings-panel .section__title {
+  text-shadow: none;
+  margin-bottom: 0.85rem;
+}
+
+.crossings-panel .article-quote--in-panel {
+  margin-bottom: 0;
+}
+
+@media (max-width: 640px) {
+  .section--fines.section--prose .section__inner--fines,
+  .section--crossings.section--prose-wide .section__inner--crossings {
+    justify-content: stretch;
+  }
+
+  .section--fines .fines-panel,
+  .section--crossings .crossings-panel {
+    max-width: none;
+  }
+}
+
 .section--prose .section__inner {
   max-width: 42rem;
 }
@@ -816,6 +890,117 @@ main {
   font-weight: 600;
   color: var(--accent);
   letter-spacing: 0.02em;
+}
+
+/* Интервью: портрет + текст (#speed) */
+.section--interview {
+  background-color: #0a0c14;
+}
+
+.section--interview .section__inner {
+  max-width: min(56rem, 100%);
+}
+
+.interview-rubric {
+  margin: 0 0 1.25rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(244, 246, 255, 0.45);
+}
+
+.interview-layout {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 2.25rem);
+  align-items: start;
+}
+
+@media (min-width: 768px) {
+  .interview-layout {
+    grid-template-columns: minmax(11rem, 17.5rem) minmax(0, 1fr);
+    column-gap: clamp(1.75rem, 4vw, 2.75rem);
+  }
+}
+
+.interview-portrait {
+  margin: 0;
+  max-width: 20rem;
+}
+
+@media (min-width: 768px) {
+  .interview-portrait {
+    position: sticky;
+    top: calc(var(--header-h) + 1.25rem);
+    max-width: none;
+  }
+}
+
+.interview-portrait__frame {
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 24px 56px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  background: rgba(12, 14, 28, 0.6);
+}
+
+.interview-portrait__frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  vertical-align: middle;
+}
+
+.interview-portrait__caption {
+  margin: 1rem 0 0;
+  padding: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.05rem, 2vw, 1.2rem);
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.interview-portrait__role {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.interview-body {
+  min-width: 0;
+}
+
+.article-quote--interview {
+  margin: 1.5rem 0 1.35rem;
+  border-left-width: 4px;
+  background: rgba(110, 231, 255, 0.06);
+}
+
+.article-quote--interview .article-quote__speech {
+  margin: 0;
+  font-size: clamp(1.02rem, 0.95rem + 0.2vw, 1.125rem);
+  line-height: 1.68;
+  font-style: italic;
+  color: rgba(244, 246, 255, 0.92);
+}
+
+.article-quote--interview .article-quote__speech::before {
+  content: "— ";
+  font-style: normal;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.interview-intro {
+  margin-bottom: 0.25rem;
 }
 
 .context-grid {
@@ -1306,6 +1491,9 @@ main {
 
 .scooter-game__canvas-wrap {
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-radius: var(--radius);
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -1316,8 +1504,10 @@ main {
 .scooter-game__canvas-wrap canvas {
   display: block;
   width: 100%;
+  max-width: 100%;
   height: auto;
   vertical-align: middle;
+  flex-shrink: 0;
 }
 
 .scooter-game__overlay {
@@ -1420,6 +1610,29 @@ main {
 
 .scooter-game--playing .scooter-game__canvas-wrap canvas {
   touch-action: none;
+}
+
+#game.section {
+  min-height: auto;
+}
+
+@media (max-height: 900px) {
+  #game.section {
+    padding-block: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  #game .section__text.scooter-game__lead {
+    margin-bottom: 0.75rem;
+  }
+
+  #game .scooter-game__hint {
+    margin-top: 0.45rem;
+    min-height: 1.2rem;
+  }
+
+  #game .scooter-game__actions {
+    margin-top: 0.6rem;
+  }
 }
 
 @media (max-width: 639px), (hover: none) and (pointer: coarse) {

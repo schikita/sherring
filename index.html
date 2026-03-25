@@ -52,12 +52,9 @@
         </button>
         <nav class="nav" id="mainNav" aria-label="Основная навигация">
           <ul class="nav__list">
-            <li><a href="#hero" data-scroll>Главная</a></li>
-            <li><a href="#season" data-scroll>Сезон</a></li>
             <li><a href="#speed" data-scroll>Скорость</a></li>
             <li><a href="#fines" data-scroll>Штрафы</a></li>
             <li><a href="#parking" data-scroll>Парковка</a></li>
-            <li><a href="#context" data-scroll>В тему</a></li>
           </ul>
         </nav>
       </div>
@@ -105,9 +102,9 @@
               <p>
                 В Беларуси стартовал сезон аренды самокатов. Только в Минске
                 подготовили около 15 тысяч единиц такой техники. Ехать она будет
-                по обновлённым правилам. Для шеринговых компаний ужесточили
+                по обновленным правилам. Для шеринговых компаний ужесточили
                 условия парковки, а за грубые нарушения, в частности за поездки
-                вдвоём на одном транспортном средстве, пользователя могут
+                вдвоем на одном транспортном средстве, пользователя могут
                 заблокировать. Кроме того, определены зоны, полностью свободные
                 от самокатов и велосипедов.
               </p>
@@ -116,69 +113,113 @@
         </section>
 
         <section
-          class="section section--prose section--prose-wide"
+          class="section section--prose section--prose-wide section--interview"
           id="speed"
-          data-bg="assets/section-slider.jpg"
+          aria-labelledby="speedInterviewHeading"
+          data-bg="assets/bg_interview.jpg"
         >
           <div class="section__bg"></div>
           <div class="section__overlay section__overlay--dark"></div>
           <div class="container section__inner">
-            <p class="section__kicker fade-in" data-reveal>
-              Нарушил — в «блок»
-            </p>
-            <h2 class="section__title fade-in" data-reveal>
-              Скорость и контроль
+            <h2 class="section__kicker fade-in" data-reveal id="speedInterviewHeading">
+              Нарушил – в «блок»
             </h2>
-            <div class="prose fade-in" data-reveal>
-              <p>
-                О том, что меняется для самокатчиков в этом сезоне, мы
-                поговорили с начальником ГАИ Фрунзенского РУВД Минска Евгением
-                Казариным. Этот отдел выбрали не случайно: Фрунзенский район —
-                самый крупный в Минске, и на него приходится без малого половина
-                всех прокатных самокатов в городе.
-              </p>
+            <p class="interview-rubric fade-in" data-reveal>Интервью</p>
+            <div class="interview-layout">
+              <figure class="interview-portrait fade-in" data-reveal>
+                <div class="interview-portrait__frame">
+                  <img
+                    src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+                    data-lazy-src="assets/interview.jpg"
+                    alt="Евгений Казарин, начальник ГАИ Фрунзенского РУВД Минска"
+                    width="560"
+                    height="700"
+                    decoding="async"
+                  />
+                </div>
+                <figcaption class="interview-portrait__caption">
+                  Евгений Казарин
+                </figcaption>
+                <span class="interview-portrait__role"
+                  >Начальник ГАИ Фрунзенского РУВД Минска</span
+                >
+              </figure>
+              <div class="interview-body">
+                <div class="prose interview-intro fade-in" data-reveal>
+                  <p>
+                    О том, что меняется для самокатчиков в этом сезоне, мы
+                    поговорили с Евгением Казариным. Этот отдел выбрали
+                    неслучайно: Фрунзенский район – самый крупный в Минске, на него
+                    приходится без малого половина всех прокатных самокатов в
+                    городе.
+                  </p>
+                </div>
+                <blockquote
+                  class="article-quote article-quote--interview fade-in"
+                  data-reveal
+                >
+                  <p class="article-quote__speech">
+                    В пределах первого городского кольца действуют скоростные
+                    режимы до 15 км/ч, в пределах второго городского кольца — 17
+                    км/ч. На оставшейся территории города скорость ограничена до
+                    20 км/ч. Определены и тихие зоны. Это примерно 200 аварийно
+                    опасных перекрестков, где скорость ограничена до 7 км/ч, что
+                    сопоставимо со скоростью пешехода.
+                  </p>
+                </blockquote>
+              </div>
             </div>
-            <blockquote class="article-quote fade-in" data-reveal>
-              <p>
-                В пределах первого городского кольца действуют скоростные режимы
-                до 15 км/ч, в пределах второго городского кольца — 17 км/ч. На
-                оставшейся территории города скорость ограничена до 20 км/ч.
-                Определены и тихие зоны. Это примерно 200 аварийно-опасных
-                перекрёстков, где скорость ограничена до 7 км/ч, что сопоставимо
-                со скоростью пешехода.
-              </p>
-              <cite
-                >Евгений Казарин, начальник ГАИ Фрунзенского РУВД Минска</cite
-              >
-            </blockquote>
+          </div>
+        </section>
+
+        <section
+          class="section section--prose section--prose-wide"
+          id="sharing"
+          data-bg="assets/section-story.jpg"
+        >
+          <div class="section__bg"></div>
+          <div class="section__overlay"></div>
+          <div class="container section__inner">
             <div class="prose fade-in" data-reveal>
               <p>
-                Кикшеринги снизили скорость своей техники на программном уровне,
-                то есть разогнаться на арендованном самокате не получится в
-                принципе. А как скоростные лимиты соблюдают владельцы личных
-                электросамокатов, проконтролируют госавтоинспекторы.
+                Кикшеринги снизили скорость своей техники на программном
+                уровне, то есть разогнаться на арендованном самокате не
+                получится в принципе. А как скоростные лимиты соблюдают владельцы
+                личных электросамокатов, проконтролируют госавтоинспекторы.
+              </p>
+              <p>
+                Хорошая новость для пешеходов: определены зоны, полностью
+                свободные от самокатов и велосипедов. Без риска быть сбитым на
+                тротуаре можно смело гулять в парках Победы, Челюскинцев и
+                Горького в Минске, а также возле дошкольных учреждений. Эти места
+                оборудуют соответствующими информационными табличками.
               </p>
             </div>
           </div>
         </section>
 
         <section
-          class="section section--fixed section--prose"
-          id="zones"
-          data-bg="assets/section-fixed.jpg"
+          class="section section--prose section--fines"
+          id="fines"
+          data-bg="assets/two.jpg"
         >
-          <div class="section__bg section__bg--fixed"></div>
-          <div class="section__overlay section__overlay--vignette"></div>
-          <div class="container section__inner">
-            <div class="card-3d fade-in" data-reveal>
-              <h2 class="section__title">Зоны без самокатов и велосипедов</h2>
+          <div class="section__bg"></div>
+          <div class="container section__inner section__inner--fines">
+            <div class="fines-panel fade-in" data-reveal>
+              <h2 class="section__title">
+                Двое на одном самокате
+              </h2>
               <div class="prose">
                 <p>
-                  Хорошая новость для пешеходов: определены зоны, полностью
-                  свободные от самокатов и велосипедов. Без риска быть сбитым на
-                  тротуаре можно смело гулять в парках Победы, Челюскинцев и
-                  Горького в Минске, а также возле дошкольных учреждений. Эти
-                  места оборудуют соответствующими информационными табличками.
+                  <strong>Ситуация:</strong> госавтоинспектор остановил
+                  самокатчика, который катал свою девушку, хотя по правилам это
+                  запрещено, ведь устройство рассчитано на одного человека.
+                  <strong
+                    >В этом случае наказание будет и по линии ГАИ, а именно штраф
+                    от 1 до 3 базовых величин (45–135 рублей), и по линии
+                    шеринговой компании, которой ГАИ передает сведения о
+                    нарушении. Аккаунт заблокируют до конца сезона.</strong
+                  >
                 </p>
               </div>
             </div>
@@ -186,34 +227,9 @@
         </section>
 
         <section
-          class="section section--prose"
-          id="fines"
-          data-bg="assets/section-gallery-bg.jpg"
-        >
-          <div class="section__bg"></div>
-          <div class="section__overlay"></div>
-          <div class="container section__inner">
-            <h2 class="section__title fade-in" data-reveal>
-              Двое на одном самокате
-            </h2>
-            <div class="prose fade-in" data-reveal>
-              <p>
-                <strong>Ситуация:</strong> госавтоинспектор остановил
-                самокатчика, который катал свою девушку, хотя по правилам это
-                запрещено — устройство рассчитано на одного человека. В этом
-                случае наказание будет и по линии ГАИ, а именно штраф от 1 до 3
-                базовых величин (45–135 рублей), и по линии шеринговой компании,
-                которой ГАИ передаёт сведения о нарушении. Аккаунт заблокируют
-                до конца сезона.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section
           class="section section--prose section--prose-wide"
           id="parking"
-          data-bg="assets/section-game.jpg"
+          data-bg="assets/section-fixed.jpg"
         >
           <div class="section__bg"></div>
           <div class="section__overlay section__overlay--game"></div>
@@ -227,17 +243,14 @@
                 самокаты нередко бросали где попало, создавая помехи пешеходам.
                 Теперь обустройство мест для парковки ложится на кикшеринговые
                 компании. Завершить поездку за пределами специальной зоны не
-                получится.
-              </p>
-              <p>
-                Говоря об этом, замначальника УГАИ ГУВД Мингорисполкома Денис
-                Ливанович подчеркнул, что точки должны быть удобными, но при
-                этом их расположение необходимо тщательно координировать, чтобы
-                не мешать пешеходам. Важный нюанс — парковки прокатных самокатов
+                получится. Говоря об этом, замначальника УГАИ ГУВД Мингорисполкома
+                Денис Ливанович подчеркнул, что точки должны быть удобными, но при
+                этом их расположение необходимо тщательно координировать, чтобы не
+                мешать пешеходам. Важный нюанс – парковки прокатных самокатов
                 нельзя размещать ближе 50 метров от входов в метро.
               </p>
               <p>
-                Ещё одна мера коснётся погодных условий: теперь в непогоду
+                Еще одна мера коснется погодных условий: теперь в непогоду
                 операторы смогут полностью отключать возможность аренды.
               </p>
             </div>
@@ -245,35 +258,35 @@
         </section>
 
         <section
-          class="section section--prose section--prose-wide"
+          class="section section--prose section--prose-wide section--crossings"
           id="crossings"
-          data-bg="assets/section-live.jpg"
+          data-bg="assets/where.jpg"
         >
           <div class="section__bg"></div>
-          <div class="section__overlay"></div>
-          <div class="container section__inner">
-            <h2 class="section__title fade-in" data-reveal>
-              Где можно не спешиваться
-            </h2>
-            <div class="prose fade-in" data-reveal>
-              <p>
-                Для удобства велосипедистов и самокатчиков дорожную
-                инфраструктуру в Минске существенно модернизировали. В городе
-                дополнительно устанавливают велосветофоры и информационные
-                таблички, которые позволяют не спешиваться на переходах.
-              </p>
+          <div class="container section__inner section__inner--crossings">
+            <div class="crossings-panel fade-in" data-reveal>
+              <h2 class="section__title">
+                Где можно не спешиваться
+              </h2>
+              <div class="prose">
+                <p>
+                  Для удобства велосипедистов и самокатчиков дорожную
+                  инфраструктуру в Минске существенно модернизировали. В городе
+                  дополнительно устанавливают велосветофоры и информационные
+                  таблички, которые позволяют не спешиваться на переходах.
+                </p>
+              </div>
+              <blockquote class="article-quote article-quote--in-panel">
+                <p>
+                  В первую очередь такие таблички и велосветофоры ставят вдоль
+                  проспектов и крупных улиц, на велодорожках, а также там, где нет
+                  конфликта интересов при движении между автомобилем и самокатом,
+                  велосипедом. Но это не значит, что такие перекрестки можно
+                  пролетать сломя голову. Скорость должна быть сопоставима со
+                  скоростью пешехода, - предупреждает Евгений Казарин.
+                </p>
+              </blockquote>
             </div>
-            <blockquote class="article-quote fade-in" data-reveal>
-              <p>
-                В первую очередь такие таблички и велосветофоры ставят вдоль
-                проспектов и крупных улиц, на велодорожках, а также там, где нет
-                конфликта интересов при движении между автомобилем и самокатом,
-                велосипедом. Но это не значит, что такие перекрёстки можно
-                пролетать сломя голову. Скорость должна быть сопоставима со
-                скоростью пешехода.
-              </p>
-              <cite>Евгений Казарин</cite>
-            </blockquote>
           </div>
         </section>
 
@@ -286,23 +299,23 @@
           <div class="section__overlay"></div>
           <div class="container section__inner">
             <h2 class="section__title fade-in" data-reveal>
-              Моделируем распространённые ситуации
+              Моделируем распространенные ситуации
             </h2>
             <div class="prose fade-in" data-reveal>
               <p>
                 <strong>Сценарий первый:</strong> по тротуару движется самокат,
-                а со двора выезжает автомобиль. Мгновение — ДТП. Кто виноват?
+                а со двора выезжает автомобиль. Мгновение – ДТП. Кто виноват?
               </p>
             </div>
             <blockquote class="article-quote fade-in" data-reveal>
               <p>
-                Теперь мы даём оценку действиям не только водителя автомобиля,
+                Теперь мы даем оценку действиям не только водителя автомобиля,
                 но и водителя самоката. Да, автомобилист обязан уступить дорогу,
                 но и самокатчик обязан спешиться. Виновным в ДТП при таком
                 сценарии будет признан именно водитель средства персональной
-                мобильности. Многие самокатчики это знают, поэтому не «несутся»,
-                как раньше, а у выездов со двора притормаживают, понимая, что в
-                случае аварии понесут ответственность.
+                мобильности. Многие самокатчики это знают, поэтому не несутся, как
+                раньше, а у выездов со двора притормаживают, понимая, что в случае
+                аварии понесут ответственность.
               </p>
               <cite>Евгений Казарин</cite>
             </blockquote>
@@ -312,24 +325,149 @@
                 врезается в пешехода или другого самокатчика.
               </p>
               <p>
-                В данном случае речь идёт о гражданско-правовых отношениях,
-                поскольку у участников нет и не может быть договора
-                обязательного страхования гражданской ответственности владельцев
-                транспортных средств. Такими инцидентами занимаются участковые
-                инспекторы милиции или уголовного розыска — в зависимости от
-                тяжести последствий столкновения.
+                В данном случае речь идет о гражданско-правовых отношениях,
+                поскольку у участников нет и не может быть договора обязательного
+                страхования гражданской ответственности владельцев транспортных
+                средств. Такими инцидентами занимаются участковые инспекторы
+                милиции или уголовного розыска - в зависимости от тяжести
+                последствий столкновения.
               </p>
               <p>
                 Если же при проверке выяснится, что попавшее в ДТП средство
                 персональной мобильности способно разгоняться свыше 25 км/ч,
-                значит, оно относится к категории «мопед», и владелец должен был
+                значит, оно относится к категории «мопед» и владелец должен был
                 его зарегистрировать, получить водительское удостоверение.
-                Соответственно, в данном случае речь идёт об управлении
-                транспортным средством без права управления — штраф от 5 до 20
+                Соответственно, в данном случае речь идет об управлении
+                транспортным средством без права управления - штраф от 5 до 20
                 базовых величин (225–900 рублей). А если владелец СПМ был пьян,
-                то ему грозит штраф в размере 100 базовых величин (4500 рублей)
-                и лишение права управления на три года.
+                то ему грозит штраф в размере 100 базовых величин (4500 рублей) и
+                лишение права управления на три года.
               </p>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="section section--game"
+          id="game"
+          data-bg="assets/section-game.jpg"
+        >
+          <div class="section__bg"></div>
+          <div class="section__overlay section__overlay--game"></div>
+          <div class="container section__inner section__inner--center">
+            <div class="scooter-game fade-in" data-reveal id="scooterGameRoot">
+              <h2 class="section__title">Самокатчик</h2>
+              <p class="section__text scooter-game__lead">
+                Управляйте самокатчиком, соблюдая сигналы светофора и лимиты.
+                Заряжайте батарею и избегайте люков и пешеходов.
+                <span class="scooter-game__lead-keyboard">
+                  Клавиша X — спешиться и ехать медленнее.
+                </span>
+                <span class="scooter-game__lead-touch">
+                  Вверху экрана: свайп влево или вправо для перестроения либо тап
+                  по левой, центральной или правой зоне; внизу — газ и тормоз;
+                  кнопка «Спешиться» — пешком.
+                </span>
+              </p>
+              <div class="scooter-game__canvas-wrap">
+                <canvas
+                  id="scooterGameCanvas"
+                  tabindex="0"
+                  width="800"
+                  height="450"
+                  role="application"
+                  aria-label="Игровое поле: дорога и самокатчик. Удерживайте W для движения."
+                ></canvas>
+                <div class="scooter-game__overlay" id="scooterGameOverlay">
+                  <div class="scooter-game__overlay-panel">
+                    <p class="scooter-game__overlay-title" id="scooterOverlayTitle">
+                      Самокатчик
+                    </p>
+                    <p
+                      class="scooter-game__overlay-text scooter-game__overlay-text--desktop"
+                      id="scooterOverlayText"
+                    >
+                      Удерживайте <strong>W</strong> или <strong>↑</strong> — газ,
+                      <strong>S</strong> или <strong>↓</strong> — тормоз; стоя с
+                      зажатым тормозом можно чуть откатиться назад. A D / ← → —
+                      полоса, <strong>X</strong> — спешиться. На
+                      <strong>красный</strong> — почти остановитесь (на жёлтый
+                      штраф не начисляется). Зелёная зона зарядки — на любой
+                      скорости.
+                    </p>
+                    <p
+                      class="scooter-game__overlay-text scooter-game__overlay-text--mobile"
+                      id="scooterOverlayTextMobile"
+                    >
+                      <strong>Верх экрана</strong>: свайп влево/вправо или тап
+                      слева / центр / справа — смена полосы.
+                      <strong>Низ</strong>: центр — газ, углы — тормоз (или кнопка
+                      «Тормоз»). <strong>Спешиться</strong> — кнопка под полем. На
+                      красный — остановитесь; зарядка на зелёной зоне сразу при
+                      заезде.
+                    </p>
+                    <button
+                      type="button"
+                      class="btn btn--primary scooter-game__start"
+                      id="scooterGameStart"
+                    >
+                      Начать игру
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="scooter-game__touch-bar"
+                id="scooterTouchBar"
+                aria-label="Дополнительные элементы управления"
+              >
+                <button
+                  type="button"
+                  class="btn btn--ghost scooter-game__touch-btn"
+                  id="scooterTouchBrake"
+                >
+                  Тормоз
+                </button>
+                <button
+                  type="button"
+                  class="btn btn--ghost scooter-game__touch-btn"
+                  id="scooterTouchDismount"
+                >
+                  Спешиться
+                </button>
+              </div>
+              <div class="scooter-game__hud" aria-live="polite">
+                <div class="scooter-game__stat">
+                  <span class="scooter-game__label">Очки</span>
+                  <strong id="scooterHudScore">0</strong>
+                </div>
+                <div class="scooter-game__stat">
+                  <span class="scooter-game__label">Штрафы</span>
+                  <strong id="scooterHudFines">0</strong>
+                </div>
+                <div class="scooter-game__stat">
+                  <span class="scooter-game__label">Батарея</span>
+                  <strong id="scooterHudBattery">100%</strong>
+                </div>
+                <div class="scooter-game__stat">
+                  <span class="scooter-game__label">Скорость</span>
+                  <strong><span id="scooterHudSpeed">0</span> км/ч</strong>
+                </div>
+                <div class="scooter-game__stat scooter-game__stat--wide">
+                  <span class="scooter-game__label">Режим</span>
+                  <strong id="scooterHudMode">Самокат</strong>
+                </div>
+              </div>
+              <p class="scooter-game__hint" id="scooterHudMsg"></p>
+              <div class="scooter-game__actions">
+                <button
+                  type="button"
+                  class="btn btn--ghost"
+                  id="scooterGamePause"
+                >
+                  Пауза
+                </button>
+              </div>
             </div>
           </div>
         </section>
@@ -399,56 +537,6 @@
                 role="tablist"
                 aria-label="Выбор слайда"
               ></div>
-            </div>
-          </div>
-        </section>
-
-        <section
-          class="section section--prose section--prose-wide"
-          id="context"
-          data-bg="assets/section-fixed.jpg"
-        >
-          <div class="section__bg"></div>
-          <div class="section__overlay section__overlay--vignette"></div>
-          <div class="container section__inner">
-            <h2 class="section__title fade-in" data-reveal>В тему и справка</h2>
-            <div class="context-grid fade-in" data-reveal>
-              <div class="context-card">
-                <h3 class="context-card__title">
-                  Евгений Марцулевич, начальник отдела сбыта компании-импортёра
-                  электротранспорта
-                </h3>
-                <div class="prose">
-                  <p>
-                    Новации в части законодательства о средствах персональной
-                    мобильности коснулись не только пользователей, но и
-                    импортёров. В основном технику везут из Китая. Сотрудники
-                    таможни особое внимание уделяют скоростным характеристикам.
-                    Если в инструкции они не прописаны, то мы, как поставщики,
-                    обращаемся в лабораторию Госстандарта для получения
-                    сертификата, в котором будет указана максимальная скорость
-                    25 км/ч. Только после этого таможня пропускает товар для
-                    дальнейшей реализации в Беларуси. Поэтому на этапе закупки
-                    новой партии уточняем скоростные характеристики у
-                    завода-изготовителя.
-                  </p>
-                </div>
-              </div>
-              <div class="context-card">
-                <h3 class="context-card__title">Пройти все испытания</h3>
-                <div class="prose">
-                  <p>
-                    Выдано более 900 выписок из электронных паспортов на
-                    транспортные средства типов «мопед» и «мотоцикл».
-                    Приобретённым до 1 сентября 2025 года и имеющим максимальную
-                    конструктивную скорость более 25 км/ч СПМ необходимо пройти
-                    оценку соответствия для участия в дорожном движении по
-                    дорогам с усовершенствованным покрытием. Создано 25
-                    испытательных лабораторий в 16 городах. Примечательно, что
-                    90 процентов СПМ оказались мопедами.
-                  </p>
-                </div>
-              </div>
             </div>
           </div>
         </section>
@@ -526,129 +614,6 @@
                 />
                 <span class="gallery__shine" aria-hidden="true"></span>
               </button>
-            </div>
-          </div>
-        </section>
-
-        <section
-          class="section section--game"
-          id="game"
-          data-bg="assets/section-game.jpg"
-        >
-          <div class="section__bg"></div>
-          <div class="section__overlay section__overlay--game"></div>
-          <div class="container section__inner section__inner--center">
-            <div class="scooter-game fade-in" data-reveal id="scooterGameRoot">
-              <h2 class="section__title">Самокатчик</h2>
-              <p class="section__text scooter-game__lead">
-                Управляйте скоростью и полосой, соблюдайте светофор и лимиты,
-                заряжайте батарею и избегайте люков и пешеходов.
-                <span class="scooter-game__lead-keyboard">
-                  Клавиша X — спешиться и ехать медленнее.
-                </span>
-                <span class="scooter-game__lead-touch">
-                  На смартфоне: в верхней части экрана игры тапните слева, по
-                  центру или справа, чтобы сменить полосу; внизу удерживайте
-                  центр — газ, нижние углы — тормоз; кнопка «Спешиться» — пешком.
-                </span>
-              </p>
-              <div class="scooter-game__canvas-wrap">
-                <canvas
-                  id="scooterGameCanvas"
-                  tabindex="0"
-                  width="800"
-                  height="450"
-                  role="application"
-                  aria-label="Игровое поле: дорога и самокатчик. Удерживайте W для движения."
-                ></canvas>
-                <div class="scooter-game__overlay" id="scooterGameOverlay">
-                  <div class="scooter-game__overlay-panel">
-                    <p class="scooter-game__overlay-title" id="scooterOverlayTitle">
-                      Самокатчик
-                    </p>
-                    <p
-                      class="scooter-game__overlay-text scooter-game__overlay-text--desktop"
-                      id="scooterOverlayText"
-                    >
-                      Удерживайте <strong>W</strong> или <strong>↑</strong> — газ,
-                      <strong>S</strong> или <strong>↓</strong> — тормоз. A D /
-                      ← → — полоса, <strong>X</strong> — спешиться (медленнее).
-                      Красный свет: почти остановитесь. Зелёная площадка — зарядка
-                      (медленно).
-                    </p>
-                    <p
-                      class="scooter-game__overlay-text scooter-game__overlay-text--mobile"
-                      id="scooterOverlayTextMobile"
-                    >
-                      <strong>Верхняя половина</strong> — тап слева / центр / справа
-                      для смены полосы. <strong>Нижняя зона</strong>: удерживайте
-                      <strong>центр</strong> — газ, <strong>нижние углы</strong> —
-                      тормоз (или кнопка «Тормоз»). <strong>Спешиться</strong> —
-                      кнопка под полем. Красный свет: почти остановитесь. Зелёная
-                      площадка — зарядка (медленно).
-                    </p>
-                    <button
-                      type="button"
-                      class="btn btn--primary scooter-game__start"
-                      id="scooterGameStart"
-                    >
-                      Начать игру
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div
-                class="scooter-game__touch-bar"
-                id="scooterTouchBar"
-                aria-label="Дополнительные элементы управления"
-              >
-                <button
-                  type="button"
-                  class="btn btn--ghost scooter-game__touch-btn"
-                  id="scooterTouchBrake"
-                >
-                  Тормоз
-                </button>
-                <button
-                  type="button"
-                  class="btn btn--ghost scooter-game__touch-btn"
-                  id="scooterTouchDismount"
-                >
-                  Спешиться
-                </button>
-              </div>
-              <div class="scooter-game__hud" aria-live="polite">
-                <div class="scooter-game__stat">
-                  <span class="scooter-game__label">Очки</span>
-                  <strong id="scooterHudScore">0</strong>
-                </div>
-                <div class="scooter-game__stat">
-                  <span class="scooter-game__label">Штрафы</span>
-                  <strong id="scooterHudFines">0</strong>
-                </div>
-                <div class="scooter-game__stat">
-                  <span class="scooter-game__label">Батарея</span>
-                  <strong id="scooterHudBattery">100%</strong>
-                </div>
-                <div class="scooter-game__stat">
-                  <span class="scooter-game__label">Скорость</span>
-                  <strong><span id="scooterHudSpeed">0</span> км/ч</strong>
-                </div>
-                <div class="scooter-game__stat scooter-game__stat--wide">
-                  <span class="scooter-game__label">Режим</span>
-                  <strong id="scooterHudMode">Самокат</strong>
-                </div>
-              </div>
-              <p class="scooter-game__hint" id="scooterHudMsg"></p>
-              <div class="scooter-game__actions">
-                <button
-                  type="button"
-                  class="btn btn--ghost"
-                  id="scooterGamePause"
-                >
-                  Пауза
-                </button>
-              </div>
             </div>
           </div>
         </section>
