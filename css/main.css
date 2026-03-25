@@ -86,11 +86,15 @@ button {
 .container {
   width: min(1120px, 100% - 2.5rem);
   margin-inline: auto;
+  box-sizing: border-box;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 767px) {
   .container {
-    width: min(1120px, 100% - 1.25rem);
+    width: 100%;
+    max-width: 1120px;
+    padding-inline: max(1.25rem, env(safe-area-inset-left, 0px))
+      max(1.25rem, env(safe-area-inset-right, 0px));
   }
 }
 
@@ -182,8 +186,18 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+  box-sizing: border-box;
   padding-inline: max(0px, env(safe-area-inset-left, 0px))
     max(0px, env(safe-area-inset-right, 0px));
+}
+
+@media (max-width: 767px) {
+  .header__inner {
+    width: 100%;
+    max-width: 1200px;
+    padding-inline: max(1.25rem, env(safe-area-inset-left, 0px))
+      max(1.25rem, env(safe-area-inset-right, 0px));
+  }
 }
 
 .logo {
@@ -824,6 +838,8 @@ main {
   .section--fines.section--prose .section__inner--fines,
   .section--crossings.section--prose-wide .section__inner--crossings {
     justify-content: stretch;
+    max-width: 100%;
+    width: 100%;
   }
 
   .section--fines .fines-panel,
