@@ -2071,9 +2071,118 @@ main {
   }
 }
 
+.modal--gallery .modal__dialog {
+  overflow: visible;
+}
+
+.modal__viewer {
+  position: relative;
+  z-index: 0;
+  width: 100%;
+  touch-action: pan-y pinch-zoom;
+  isolation: isolate;
+}
+
+.modal__nav-btn {
+  position: absolute;
+  top: 50%;
+  z-index: 10;
+  transform: translateY(-50%);
+  width: 2.75rem;
+  height: 2.75rem;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  line-height: 1;
+  color: var(--text);
+  background: rgba(5, 6, 13, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  transition:
+    background 0.3s,
+    box-shadow 0.3s,
+    transform 0.3s var(--ease-out-expo);
+}
+
+.modal__nav-btn:hover {
+  background: rgba(110, 231, 255, 0.28);
+  box-shadow:
+    0 6px 28px rgba(0, 0, 0, 0.5),
+    0 0 24px var(--accent-glow);
+}
+
+.modal__nav-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.modal__nav-btn--prev {
+  left: max(0.35rem, env(safe-area-inset-left, 0px));
+}
+
+.modal__nav-btn--next {
+  right: max(0.35rem, env(safe-area-inset-right, 0px));
+}
+
+/* Десктоп: стрелки сбоку от кадра (как у слайдера), не под слоем фото */
+@media (min-width: 720px) {
+  .modal--gallery .modal__nav-btn {
+    width: 3rem;
+    height: 3rem;
+    font-size: 2rem;
+  }
+
+  .modal--gallery .modal__nav-btn--prev {
+    left: -0.25rem;
+    transform: translate(calc(-100% - 6px), -50%);
+  }
+
+  .modal--gallery .modal__nav-btn--next {
+    right: -0.25rem;
+    transform: translate(calc(100% + 6px), -50%);
+  }
+
+  .modal--gallery .modal__nav-btn--prev:hover {
+    transform: translate(calc(-100% - 6px), -50%) scale(1.06);
+  }
+
+  .modal--gallery .modal__nav-btn--next:hover {
+    transform: translate(calc(100% + 6px), -50%) scale(1.06);
+  }
+}
+
+.modal__viewer--single .modal__nav-btn {
+  visibility: hidden;
+  pointer-events: none;
+}
+
 .modal__figure {
+  position: relative;
+  z-index: 0;
   margin: 0;
   background: #0a0c14;
+  border-radius: 0 0 var(--radius) var(--radius);
+  overflow: visible;
+}
+
+.modal__photo-scene {
+  perspective: 1400px;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+}
+
+.modal__img-flip {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform;
 }
 
 .modal__img {
@@ -2081,6 +2190,84 @@ main {
   max-height: 85vh;
   object-fit: contain;
   display: block;
+  border-radius: 0 0 var(--radius) var(--radius);
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.modal__img-flip--out-next {
+  transform-origin: left center;
+  animation: gallery-page-out-next 0.48s var(--ease-out-expo) forwards;
+}
+
+.modal__img-flip--in-next {
+  transform-origin: right center;
+  animation: gallery-page-in-next 0.48s var(--ease-out-expo) forwards;
+}
+
+.modal__img-flip--out-prev {
+  transform-origin: right center;
+  animation: gallery-page-out-prev 0.48s var(--ease-out-expo) forwards;
+}
+
+.modal__img-flip--in-prev {
+  transform-origin: left center;
+  animation: gallery-page-in-prev 0.48s var(--ease-out-expo) forwards;
+}
+
+@keyframes gallery-page-out-next {
+  from {
+    transform: rotateY(0deg);
+    filter: brightness(1);
+  }
+  to {
+    transform: rotateY(-78deg);
+    filter: brightness(0.65);
+  }
+}
+
+@keyframes gallery-page-in-next {
+  from {
+    transform: rotateY(78deg);
+    filter: brightness(0.65);
+  }
+  to {
+    transform: rotateY(0deg);
+    filter: brightness(1);
+  }
+}
+
+@keyframes gallery-page-out-prev {
+  from {
+    transform: rotateY(0deg);
+    filter: brightness(1);
+  }
+  to {
+    transform: rotateY(78deg);
+    filter: brightness(0.65);
+  }
+}
+
+@keyframes gallery-page-in-prev {
+  from {
+    transform: rotateY(-78deg);
+    filter: brightness(0.65);
+  }
+  to {
+    transform: rotateY(0deg);
+    filter: brightness(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal__img-flip--out-next,
+  .modal__img-flip--in-next,
+  .modal__img-flip--out-prev,
+  .modal__img-flip--in-prev {
+    animation: none !important;
+    filter: none !important;
+    transform: none !important;
+  }
 }
 
 .modal__close {

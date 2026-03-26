@@ -276,7 +276,50 @@
   /* Gallery modal */
   var modal = document.getElementById("galleryModal");
   var modalImg = document.getElementById("modalImg");
+  var modalImgFlip = document.getElementById("modalImgFlip");
+  var modalTitle = document.getElementById("modalTitle");
+  var galleryModalViewer = document.getElementById("galleryModalViewer");
+  var galleryModalPrev = document.getElementById("galleryModalPrev");
+  var galleryModalNext = document.getElementById("galleryModalNext");
   var galleryItems = document.querySelectorAll("[data-gallery-open]");
+
+  var galleryModalIndex = 0;
+  var galleryAnimating = false;
+  var galleryTouchStartX = 0;
+
+  function prefersReducedMotion() {
+    return (
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    );
+  }
+
+  function clearModalFlipClasses() {
+    if (!modalImgFlip) return;
+    modalImgFlip.classList.remove(
+      "modal__img-flip--out-next",
+      "modal__img-flip--in-next",
+      "modal__img-flip--out-prev",
+      "modal__img-flip--in-prev"
+    );
+  }
+
+  function updateModalCaption(idx, total) {
+    if (!modalTitle) return;
+    modalTitle.textContent =
+      "Фото " +
+      (idx + 1) +
+      " из " +
+      total +
+      ". Стрелки на клавиатуре, кнопки по бокам или свайп влево и вправо.";
+  }
+
+  function syncModalViewerSingleClass() {
+    var n = getGallerySources().length;
+    if (galleryModalViewer) {
+      galleryModalViewer.classList.toggle("modal__viewer--single", n <= 1);
+    }
+  }
 
   function getGallerySources() {
     var out = [];
@@ -299,9 +342,18 @@
 
   function openModal(index) {
     var gallerySources = getGallerySources();
-    if (!modal || !modalImg || !gallerySources[index]) return;
-    modalImg.src = gallerySources[index].src;
-    modalImg.alt = gallerySources[index].alt;
+    if (!modal || !modalImg || !gallerySources.length) return;
+    var n = gallerySources.length;
+    var idx = index;
+    if (isNaN(idx)) idx = 0;
+    idx = ((idx % n) + n) % n;
+    galleryModalIndex = idx;
+    galleryAnimating = false;
+    clearModalFlipClasses();
+    modalImg.src = gallerySources[idx].src;
+    modalImg.alt = gallerySources[idx].alt;
+    updateModalCaption(idx, n);
+    syncModalViewerSingleClass();
     modal.removeAttribute("hidden");
     document.body.classList.add("modal-open");
   }
@@ -310,7 +362,111 @@
     if (!modal || !modalImg) return;
     modal.setAttribute("hidden", "");
     modalImg.src = "";
+    galleryAnimating = false;
+    clearModalFlipClasses();
+    if (galleryModalViewer) galleryModalViewer.classList.remove("modal__viewer--single");
     document.body.classList.remove("modal-open");
+  }
+
+  function beginModalNavigate(delta) {
+    var sources = getGallerySources();
+    if (!modal || modal.hasAttribute("hidden") || !modalImgFlip || !modalImg)
+      return;
+    if (sources.length <= 1) return;
+    if (galleryAnimating) return;
+
+    var n = sources.length;
+    var nextIdx = (galleryModalIndex + delta + n) % n;
+
+    if (prefersReducedMotion()) {
+      galleryModalIndex = nextIdx;
+      modalImg.src = sources[nextIdx].src;
+      modalImg.alt = sources[nextIdx].alt;
+      updateModalCaption(nextIdx, n);
+      return;
+    }
+
+    galleryAnimating = true;
+    var dirNext = delta > 0;
+    var outClass = dirNext
+      ? "modal__img-flip--out-next"
+      : "modal__img-flip--out-prev";
+
+    function finishIn() {
+      var inClass = dirNext
+        ? "modal__img-flip--in-next"
+        : "modal__img-flip--in-prev";
+
+      function onInEnd(ev) {
+        if (ev.target !== modalImgFlip) return;
+        modalImgFlip.removeEventListener("animationend", onInEnd);
+        modalImgFlip.classList.remove(inClass);
+        galleryAnimating = false;
+      }
+
+      modalImgFlip.addEventListener("animationend", onInEnd);
+      void modalImgFlip.offsetWidth;
+      modalImgFlip.classList.add(inClass);
+    }
+
+    function afterSrcSet() {
+      modalImg.onload = null;
+      modalImg.onerror = null;
+      finishIn();
+    }
+
+    function onOutEnd(ev) {
+      if (ev.target !== modalImgFlip) return;
+      modalImgFlip.removeEventListener("animationend", onOutEnd);
+      modalImgFlip.classList.remove(outClass);
+      galleryModalIndex = nextIdx;
+      modalImg.alt = sources[nextIdx].alt;
+      updateModalCaption(nextIdx, n);
+      modalImg.onload = afterSrcSet;
+      modalImg.onerror = afterSrcSet;
+      modalImg.src = sources[nextIdx].src;
+      if (modalImg.complete && modalImg.naturalWidth) afterSrcSet();
+    }
+
+    modalImgFlip.addEventListener("animationend", onOutEnd);
+    modalImgFlip.classList.add(outClass);
+  }
+
+  if (galleryModalPrev) {
+    galleryModalPrev.addEventListener("click", function (e) {
+      e.stopPropagation();
+      beginModalNavigate(-1);
+    });
+  }
+  if (galleryModalNext) {
+    galleryModalNext.addEventListener("click", function (e) {
+      e.stopPropagation();
+      beginModalNavigate(1);
+    });
+  }
+
+  if (galleryModalViewer) {
+    galleryModalViewer.addEventListener(
+      "touchstart",
+      function (e) {
+        if (e.touches.length === 1) {
+          galleryTouchStartX = e.touches[0].clientX;
+        }
+      },
+      { passive: true }
+    );
+    galleryModalViewer.addEventListener(
+      "touchend",
+      function (e) {
+        if (!modal || modal.hasAttribute("hidden")) return;
+        if (!e.changedTouches.length) return;
+        var dx = e.changedTouches[0].clientX - galleryTouchStartX;
+        if (Math.abs(dx) < 48) return;
+        if (dx < 0) beginModalNavigate(1);
+        else beginModalNavigate(-1);
+      },
+      { passive: true }
+    );
   }
 
   galleryItems.forEach(function (btn) {
@@ -325,6 +481,17 @@
   });
 
   document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && modal && !modal.hasAttribute("hidden")) closeModal();
+    if (!modal || modal.hasAttribute("hidden")) return;
+    if (e.key === "Escape") {
+      closeModal();
+      return;
+    }
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      beginModalNavigate(-1);
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      beginModalNavigate(1);
+    }
   });
 })();

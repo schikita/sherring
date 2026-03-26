@@ -317,13 +317,14 @@
                 раньше, а у выездов со двора притормаживают, понимая, что в случае
                 аварии понесут ответственность.
               </p>
-              <cite>Евгений Казарин</cite>
             </blockquote>
             <div class="prose fade-in" data-reveal>
               <p>
                 <strong>Сценарий второй:</strong> самокатчик на тротуаре
                 врезается в пешехода или другого самокатчика.
               </p>
+            </div>
+            <blockquote class="article-quote fade-in" data-reveal>
               <p>
                 В данном случае речь идет о гражданско-правовых отношениях,
                 поскольку у участников нет и не может быть договора обязательного
@@ -332,6 +333,8 @@
                 милиции или уголовного розыска - в зависимости от тяжести
                 последствий столкновения.
               </p>
+            </blockquote>
+            <blockquote class="article-quote fade-in" data-reveal>
               <p>
                 Если же при проверке выяснится, что попавшее в ДТП средство
                 персональной мобильности способно разгоняться свыше 25 км/ч,
@@ -343,7 +346,7 @@
                 то ему грозит штраф в размере 100 базовых величин (4500 рублей) и
                 лишение права управления на три года.
               </p>
-            </div>
+            </blockquote>
           </div>
         </section>
 
@@ -713,7 +716,7 @@
     </footer>
 
     <div
-      class="modal"
+      class="modal modal--gallery"
       id="galleryModal"
       role="dialog"
       aria-modal="true"
@@ -731,19 +734,42 @@
         >
           Закрыть
         </button>
-        <figure class="modal__figure">
-          <img
-            class="modal__img"
-            id="modalImg"
-            src=""
-            alt=""
-            width="1600"
-            height="900"
-          />
-          <figcaption class="visually-hidden" id="modalTitle">
-            Увеличенное фото
-          </figcaption>
-        </figure>
+        <div class="modal__viewer" id="galleryModalViewer">
+          <button
+            type="button"
+            class="modal__nav-btn modal__nav-btn--prev"
+            id="galleryModalPrev"
+            aria-label="Предыдущее фото"
+          >
+            ‹
+          </button>
+          <button
+            type="button"
+            class="modal__nav-btn modal__nav-btn--next"
+            id="galleryModalNext"
+            aria-label="Следующее фото"
+          >
+            ›
+          </button>
+          <figure class="modal__figure">
+            <div class="modal__photo-scene">
+              <div class="modal__img-flip" id="modalImgFlip">
+                <img
+                  class="modal__img"
+                  id="modalImg"
+                  src=""
+                  alt=""
+                  width="1600"
+                  height="900"
+                  draggable="false"
+                />
+              </div>
+            </div>
+            <figcaption class="visually-hidden" id="modalTitle">
+              Увеличенное фото
+            </figcaption>
+          </figure>
+        </div>
       </div>
     </div>
 
