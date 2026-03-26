@@ -6,15 +6,126 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
-    <title>Штрафы, парковки и ограничения — Живой репортаж</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="image" href="assets/preload.png" fetchpriority="high" />
+
+    <!-- Канонический URL публикации (при переносе в другую папку — обновить везде в блоке ниже) -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@300;500;700&display=swap"
-      rel="stylesheet"
+      rel="canonical"
+      href="https://www.sb.by/sp/shtrafy-parkovki-ogranicheniya/"
     />
+
+    <title>
+      Штрафы, парковки и ограничения для самокатчиков — Живой репортаж | SB.BY
+    </title>
+    <meta
+      name="description"
+      content="Правила ПДД для самокатчиков и велосипедистов в Беларуси: скоростные режимы в Минске, штрафы ГАИ, парковки кикшеринга, зоны без самокатов, ответственность при ДТП и типичные сценарии. Материал спецпроекта «Живой репортаж»."
+    />
+    <meta
+      name="keywords"
+      content="самокат штрафы Беларусь, ПДД самокат, скорость самоката Минск, парковка самоката, кикшеринг, велосипедист штраф, ГАИ самокат, зоны без самокатов, электросамокат правила"
+    />
+    <meta name="author" content="Инна Горбатенко" />
+    <meta
+      name="publisher"
+      content="Издательский дом «Беларусь сегодня» — SB.BY"
+    />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="googlebot" content="index, follow, max-image-preview:large" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="theme-color" content="#05060d" />
+    <meta name="color-scheme" content="dark" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="SB.BY" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta
+      property="og:url"
+      content="https://www.sb.by/sp/shtrafy-parkovki-ogranicheniya/"
+    />
+    <meta
+      property="og:title"
+      content="Штрафы, парковки и ограничения для самокатчиков и велосипедистов"
+    />
+    <meta
+      property="og:description"
+      content="ГАИ разложила по полочкам правила дорожного движения для самокатчиков и велосипедистов: лимиты скорости, штрафы, парковка проката, тихие зоны и что будет при столкновении с авто или пешеходом. Живой репортаж SB.BY."
+    />
+    <meta
+      property="og:image"
+      content="https://www.sb.by/sp/shtrafy-parkovki-ogranicheniya/assets/hero.jpg"
+    />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:alt" content="Иллюстрация к материалу о правилах для самокатчиков и велосипедистов" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Штрафы, парковки и ограничения для самокатчиков и велосипедистов"
+    />
+    <meta
+      name="twitter:description"
+      content="Скоростные режимы в Минске, штрафы ГАИ, парковки кикшеринга и зоны запрета — в одном материале спецпроекта «Живой репортаж»."
+    />
+    <meta
+      name="twitter:image"
+      content="https://www.sb.by/sp/shtrafy-parkovki-ogranicheniya/assets/hero.jpg"
+    />
+    <meta
+      name="twitter:image:alt"
+      content="Иллюстрация к материалу о правилах для самокатчиков и велосипедистов"
+    />
+
+    <link rel="icon" href="assets/favicon.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="assets/favicon.png" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "NewsArticle",
+        "headline": "Штрафы, парковки и ограничения для самокатчиков и велосипедистов",
+        "description": "Правила ПДД для самокатчиков и велосипедистов в Беларуси: скоростные режимы в Минске, штрафы ГАИ, парковки кикшеринга, зоны без самокатов и ответственность при ДТП.",
+        "inLanguage": "ru-BY",
+        "isAccessibleForFree": true,
+        "image": {
+          "@type": "ImageObject",
+          "url": "https://www.sb.by/sp/shtrafy-parkovki-ogranicheniya/assets/hero.jpg",
+          "caption": "Иллюстрация к материалу о правилах для самокатчиков и велосипедистов"
+        },
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": "https://www.sb.by/sp/shtrafy-parkovki-ogranicheniya/"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "Инна Горбатенко"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Издательский дом «Беларусь сегодня»",
+          "url": "https://www.sb.by/"
+        },
+        "articleSection": "Живой репортаж",
+        "keywords": "самокат, велосипед, ПДД, штрафы, Минск, кикшеринг, парковка"
+      }
+    </script>
+
+    <link
+      rel="preload"
+      href="font/manrope-cyrillic.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="font/manrope-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="css/fonts.css" />
     <link rel="stylesheet" href="css/main.css" />
-    <link rel="preload" as="image" href="assets/preload.png" />
   </head>
   <body>
     <div id="pageSplash" class="page-splash" aria-hidden="true">
@@ -636,7 +747,7 @@
             </div>
           </div>
         </section>
-
+       
         <section
           class="section section--live section--fixed-alt"
           id="live"
@@ -815,7 +926,6 @@
       />
     </button>
 
-    <script src="js/main.js"></script>
-    <script src="js/scooter-game.js"></script>
+    <script src="js/main.js" defer></script>
   </body>
 </html>

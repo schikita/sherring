@@ -6,16 +6,26 @@
    * Так относительные пути assets/... работают и при открытии из подпапки на сервере,
    * и при file://, если html и js лежат в ожидаемой структуре.
    */
+  var _siteRootHrefCache = null;
   function getSiteRootHref() {
+    if (_siteRootHrefCache) return _siteRootHrefCache;
     var el = document.querySelector('script[src*="main.js"]');
-    if (!el) return new URL("./", window.location.href).href;
+    if (!el) {
+      _siteRootHrefCache = new URL("./", window.location.href).href;
+      return _siteRootHrefCache;
+    }
     var raw = el.getAttribute("src");
-    if (!raw) return new URL("./", window.location.href).href;
+    if (!raw) {
+      _siteRootHrefCache = new URL("./", window.location.href).href;
+      return _siteRootHrefCache;
+    }
     try {
       var abs = new URL(raw, window.location.href);
-      return abs.href.replace(/\/js\/main\.js(\?.*)?$/i, "/");
+      _siteRootHrefCache = abs.href.replace(/\/js\/main\.js(\?.*)?$/i, "/");
+      return _siteRootHrefCache;
     } catch (e) {
-      return new URL("./", window.location.href).href;
+      _siteRootHrefCache = new URL("./", window.location.href).href;
+      return _siteRootHrefCache;
     }
   }
 
@@ -71,6 +81,7 @@
     });
   }
 
+  var mainSectionsForLazy = document.querySelectorAll("main .section");
   if ("IntersectionObserver" in window) {
     var lazyMediaObs = new IntersectionObserver(
       function (entries) {
@@ -82,13 +93,13 @@
       },
       { root: null, rootMargin: "0px 0px 10% 0px", threshold: 0.02 }
     );
-    document.querySelectorAll("main .section").forEach(function (sec) {
+    mainSectionsForLazy.forEach(function (sec) {
       lazyMediaObs.observe(sec);
     });
     var footLazy = document.querySelector("footer.site-footer");
     if (footLazy) lazyMediaObs.observe(footLazy);
   } else {
-    document.querySelectorAll("main .section").forEach(loadSectionLazyMedia);
+    mainSectionsForLazy.forEach(loadSectionLazyMedia);
     var footFb = document.querySelector("footer.site-footer");
     if (footFb) loadSectionLazyMedia(footFb);
   }
@@ -149,24 +160,20 @@
     });
   }
 
-  /* Header shadow on scroll */
-  function onScrollHeader() {
-    if (!header) return;
-    header.classList.toggle("is-scrolled", window.scrollY > 24);
-  }
-  window.addEventListener("scroll", onScrollHeader, { passive: true });
-  onScrollHeader();
-
-  /* Back to top: иконки — только когда кнопка реально нужна (прокрутка вниз), не через IO на fixed */
+  /* Один passive scroll: шапка + «наверх» (меньше слушателей на scroll) */
   var backToTop = document.getElementById("backToTop");
-  if (backToTop) {
-    function onScrollBackToTop() {
+  function onScrollUi() {
+    if (header) header.classList.toggle("is-scrolled", window.scrollY > 24);
+    if (backToTop) {
       var show = window.scrollY > 400;
       backToTop.classList.toggle("is-visible", show);
       if (show) loadSectionLazyMedia(backToTop);
     }
-    window.addEventListener("scroll", onScrollBackToTop, { passive: true });
-    onScrollBackToTop();
+  }
+  window.addEventListener("scroll", onScrollUi, { passive: true });
+  onScrollUi();
+
+  if (backToTop) {
     backToTop.addEventListener("click", function () {
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
@@ -489,7 +496,7 @@
     if (e.key === "ArrowLeft") {
       e.preventDefault();
       beginModalNavigate(-1);
-    } else     if (e.key === "ArrowRight") {
+    } else if (e.key === "ArrowRight") {
       e.preventDefault();
       beginModalNavigate(1);
     }
@@ -507,21 +514,16 @@
       return;
     }
 
-    var scanImg = splash.querySelector(".page-splash__scan");
-    if (scanImg) {
-      var rawSrc = scanImg.getAttribute("src");
-      if (rawSrc && rawSrc.indexOf("assets/") === 0) {
-        scanImg.src = resolveAssetRef(rawSrc.replace(/^\.\//, ""));
-      }
-    }
-
-    document.documentElement.classList.add("splash-active");
-
     var titleDelayMs = 700;
     var titleFadeMs = 1100;
     var holdAfterTitleMs = 5000;
     var exitAnimMs = 1500;
     var titleReadyMs = titleDelayMs + titleFadeMs;
+    var scanImg = splash.querySelector(".page-splash__scan");
+    var splashSequenceStarted = false;
+    var safetyTimer;
+
+    document.documentElement.classList.add("splash-active");
 
     function finishSplash() {
       document.documentElement.classList.remove("splash-active");
@@ -533,6 +535,91 @@
       window.setTimeout(finishSplash, exitAnimMs);
     }
 
-    window.setTimeout(startExit, titleReadyMs + holdAfterTitleMs);
+    function beginSplashAfterPreloadReady() {
+      if (splashSequenceStarted) return;
+      splashSequenceStarted = true;
+      if (safetyTimer) window.clearTimeout(safetyTimer);
+      splash.classList.add("page-splash--scan-ready");
+      window.setTimeout(startExit, titleReadyMs + holdAfterTitleMs);
+    }
+
+    function tryDecodeThenStart() {
+      if (scanImg && scanImg.decode) {
+        scanImg
+          .decode()
+          .then(beginSplashAfterPreloadReady)
+          .catch(beginSplashAfterPreloadReady);
+      } else {
+        beginSplashAfterPreloadReady();
+      }
+    }
+
+    if (scanImg) {
+      var rawSrc = scanImg.getAttribute("src");
+      if (rawSrc && rawSrc.indexOf("assets/") === 0) {
+        scanImg.src = resolveAssetRef(rawSrc.replace(/^\.\//, ""));
+      }
+      safetyTimer = window.setTimeout(beginSplashAfterPreloadReady, 12000);
+      if (scanImg.complete && scanImg.naturalWidth > 0) {
+        tryDecodeThenStart();
+      } else {
+        scanImg.addEventListener("load", tryDecodeThenStart, { once: true });
+        scanImg.addEventListener("error", beginSplashAfterPreloadReady, {
+          once: true,
+        });
+      }
+    } else {
+      beginSplashAfterPreloadReady();
+    }
+  })();
+
+  /**
+   * Игра «Самокатчик» — тяжёлый скрипт: грузим при приближении к секции #game
+   * или в фоне через requestIdleCallback (fallback: таймаут), без блокировки первого кадра.
+   */
+  (function loadScooterGameDeferred() {
+    function injectScooterScript() {
+      if (window.__scooterGameLoadRequested) return;
+      window.__scooterGameLoadRequested = true;
+      var s = document.createElement("script");
+      try {
+        s.src = new URL("js/scooter-game.js", getSiteRootHref()).href;
+      } catch (e4) {
+        s.src = "js/scooter-game.js";
+      }
+      s.async = true;
+      document.body.appendChild(s);
+    }
+    var gameEl =
+      document.getElementById("scooterGameRoot") ||
+      document.getElementById("game");
+    if (!gameEl) return;
+    if (!("IntersectionObserver" in window)) {
+      injectScooterScript();
+      return;
+    }
+    var scooterIo = new IntersectionObserver(
+      function (entries) {
+        for (var i = 0; i < entries.length; i++) {
+          if (entries[i].isIntersecting) {
+            scooterIo.disconnect();
+            injectScooterScript();
+            return;
+          }
+        }
+      },
+      { root: null, rootMargin: "180px 0px 180px 0px", threshold: 0.01 }
+    );
+    scooterIo.observe(gameEl);
+    if (window.requestIdleCallback) {
+      window.requestIdleCallback(
+        function () {
+          injectScooterScript();
+        },
+        { timeout: 5500 }
+      );
+    } else {
+      window.setTimeout(injectScooterScript, 5500);
+    }
   })();
 })();
