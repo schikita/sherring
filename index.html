@@ -14,8 +14,24 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="css/main.css" />
+    <link rel="preload" as="image" href="assets/preload.png" />
   </head>
   <body>
+    <div id="pageSplash" class="page-splash" aria-hidden="true">
+      <div class="page-splash__inner">
+        <p class="page-splash__title">ЖИВОЙ РЕПОРТАЖ</p>
+        <img
+          class="page-splash__scan"
+          src="assets/preload.png"
+          alt=""
+          width="640"
+          height="360"
+          decoding="sync"
+          fetchpriority="high"
+        />
+      </div>
+    </div>
+
     <div class="bg-blur-orbs" aria-hidden="true">
       <span class="orb orb--a"></span>
       <span class="orb orb--b"></span>

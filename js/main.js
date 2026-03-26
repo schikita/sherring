@@ -489,9 +489,50 @@
     if (e.key === "ArrowLeft") {
       e.preventDefault();
       beginModalNavigate(-1);
-    } else if (e.key === "ArrowRight") {
+    } else     if (e.key === "ArrowRight") {
       e.preventDefault();
       beginModalNavigate(1);
     }
   });
+
+  (function pageSplash() {
+    var splash = document.getElementById("pageSplash");
+    if (!splash) return;
+
+    if (
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      splash.remove();
+      return;
+    }
+
+    var scanImg = splash.querySelector(".page-splash__scan");
+    if (scanImg) {
+      var rawSrc = scanImg.getAttribute("src");
+      if (rawSrc && rawSrc.indexOf("assets/") === 0) {
+        scanImg.src = resolveAssetRef(rawSrc.replace(/^\.\//, ""));
+      }
+    }
+
+    document.documentElement.classList.add("splash-active");
+
+    var titleDelayMs = 700;
+    var titleFadeMs = 1100;
+    var holdAfterTitleMs = 5000;
+    var exitAnimMs = 1500;
+    var titleReadyMs = titleDelayMs + titleFadeMs;
+
+    function finishSplash() {
+      document.documentElement.classList.remove("splash-active");
+      splash.remove();
+    }
+
+    function startExit() {
+      splash.classList.add("page-splash--exit");
+      window.setTimeout(finishSplash, exitAnimMs);
+    }
+
+    window.setTimeout(startExit, titleReadyMs + holdAfterTitleMs);
+  })();
 })();
